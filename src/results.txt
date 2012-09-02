@@ -1,0 +1,117 @@
+['main.py', 'UGS_KnightSlash4.tio', 'SSB: Brawl']
+Player found:Cava
+Player found:Gunblade
+Player found:Allan
+Player found:Dark King
+Player found:DarkLeviathan
+Player found:dmbrandon
+Player found:Iseph
+Player found:zerou
+Player found:zucco
+fill bracket
+Winner: 
+<player.Player object at 0xa4a110c>
+<player.Player object at 0xa4a110c>
+Winner: 
+<player.Player object at 0xa4a108c>
+<player.Player object at 0xa4a108c>
+Winner: 
+<player.Player object at 0xa4a10cc>
+<player.Player object at 0xa4a10cc>
+Winner: 
+<player.Player object at 0xa49df2c>
+<player.Player object at 0xa49df2c>
+Winner: 
+<player.Player object at 0xa4a106c>
+<player.Player object at 0xa4a106c>
+Winner: 
+<player.Player object at 0xa4a10ac>
+<player.Player object at 0xa4a10ac>
+Winner: 
+<player.Player object at 0xa49dfac>
+<player.Player object at 0xa49dfac>
+Winner: 
+<player.Player object at 0xa49dfec>
+<player.Player object at 0xa49dfec>
+Winner: 
+N/A
+N/A
+Winner: 
+N/A
+N/A
+Winner: 
+N/A
+N/A
+Winner: 
+N/A
+N/A
+Winner: 
+N/A
+N/A
+Winner: 
+N/A
+N/A
+Winner: 
+N/A
+N/A
+Winner: 
+N/A
+N/A
+Winner: 
+<player.Player object at 0xa4a10ec>
+<player.Player object at 0xa4a10ec>
+Winner: 
+Bye
+Bye
+Winner: 
+Bye
+Bye
+Winner: 
+Bye
+Bye
+Winner: 
+N/A
+N/A
+Winner: 
+N/A
+N/A
+Winner: 
+N/A
+N/A
+Winner: 
+N/A
+N/A
+Winner: 
+N/A
+N/A
+Winner: 
+N/A
+N/A
+Winner: 
+N/A
+N/A
+Winner: 
+N/A
+N/A
+Winner: 
+N/A
+N/A
+Winner: 
+N/A
+N/A
+Winner: 
+N/A
+N/A
+Created Tournament
+<player.Player object at 0xa4a110c>
+<player.Player object at 0xa4a108c>
+<player.Player object at 0xa4a10cc>
+<player.Player object at 0xa49df2c>
+<player.Player object at 0xa4a106c>
+<player.Player object at 0xa4a10ac>
+<player.Player object at 0xa49dfac>
+<player.Player object at 0xa49dfec>
+<player.Player object at 0xa4a10ec>
+Bye
+Bye
+Bye
