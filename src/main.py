@@ -3,7 +3,7 @@ sys.path.append('../pychallonge/')
 
 import xml.etree.ElementTree as XMLParseTree
 
-import challonge, tournament
+import challonge, tournament, tournaments, matches
 
 NULL_PLAYER = "00000000-0000-0000-0000-000000000000"
 
@@ -30,4 +30,11 @@ bracketSize = child.find('.Bracket/Size').text
 tioTournament = tournament.Tournament("", child.find('.ID').text, child.find('.Name'), "Sample", child.find('.BracketType').text, child, tioRoot)
 #challonge.tournaments.publish(tioTournament.challongeID)
 print "Created Tournament"
+tournaments.publish(tioTournament.challongeID)
+tournaments.start(tioTournament.challongeID)
+print tioTournament.challongeID
+
+#array = matches.index(tioTournament.challongeID)
+
 tioTournament.verifyBracket()
+

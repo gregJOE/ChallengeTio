@@ -12,6 +12,7 @@ class Tournament(object):
 	def __init__(self, url, cID, game, event, bracketStyle, gameTree, root):
 		self.unfinishedMatches = []
 		self.completedMatches = []
+		self.allMatches = []
 		self.challongeID = cID
 		self.game = game
 		self.event = event
@@ -53,13 +54,13 @@ class Tournament(object):
 			pID = entrant.text
 			for players in entrantList:
 				if players.find('.ID').text == pID:
-					print "Player found:" + players.find('.Nickname').text
+					#print "Player found:" + players.find('.Nickname').text
 					self.playerList[players.find('.ID').text] = player.Player(players.find('.Nickname').text, game, "", pID, "")
 					participants.create(self.challongeID, self.playerList[players.find('ID').text].name)
 					self.createPlayerChallongeIDs(self.playerList[players.find('ID').text])
 
-			self.playerList[NULL_PLAYER] = "N/A"
-			self.playerList[MATCH_BYE] = "Bye"
+			self.playerList[NULL_PLAYER] = player.Player("N/A", game, "None", NULL_PLAYER, "") 
+			self.playerList[MATCH_BYE] = player.Player("Bye", game, "None", MATCH_BYE, "")
 
 	def fillBracket(self, xml, playerList):
 		# find matches in xml head
@@ -73,9 +74,14 @@ class Tournament(object):
 			player2 = playerList[p2]
 			# is there a mapping function for finding stuff in arrays without loops
 			
-			matchDesc = match.Match(player1, player2, "SampleGame", "Sample", gameRound, number)
+			matchDesc = match.Match(player1, player2, "SampleGame", "Sample", int(gameRound), number)
+			if int(gameRound) < 0:
+				matchDesc.isWinners = True
+				matchDesc.bracketRound = matchDesc.bracketRound * -1
+
 			matchDesc.setWinner(playerList[matches.find('.Winner').text]) 
-			if matchDesc.getWinner() == "N/A":
+			self.allMatches.append(matchDesc)
+			if matchDesc.getWinner().name == "N/A":
 				# this needs to make a new Match object
 				# and push into the array
 				self.unfinishedMatches.append(matchDesc)
@@ -91,59 +97,95 @@ class Tournament(object):
 				player.challongeID = players['id']
 				print player.challongeID
 		
-	def swapIDs(self, playerAName, playerBName):
+	def swapIDsViaChallongeID(self, playerAID, playerBID):
 		playerA = None
 		playerB = None
+		print "Ids to be swapped:", playerAID, playerBID
+		if str(playerAID) == "None" and str(playerBID) == "None":
+			return
 
 		for players in self.playerList:
-			print players
-			if type(self.playerList[players]) == player.Player:
-				if self.playerList[players].name == playerAName:
-					playerA = self.playerList[players]
+			print self.playerList[players].name, self.playerList[players].challongeID
+			if self.playerList[players].challongeID == playerAID:
+				playerA = self.playerList[players]
 			
-				if self.playerList[players].name == playerBName:
-					playerB = self.playerList[players]
-				
-				print type(playerA)	
-				if type(playerA) == type(playerB) and type(playerA) != None:
-					break;
-
-		participants.update(self.challongeID, playerB.challongeID, name="PlaceHolderA")
-		participants.update(self.challongeID, playerA.challongeID, name="PlaceHolderB")
-                participants.update(self.challongeID, playerB.challongeID, name=playerA.name)
-                participants.update(self.challongeID, playerA.challongeID, name=playerB.name)
+			if self.playerList[players].challongeID == playerBID:
+				playerB = self.playerList[players]
 	
-	def swapIDsViaChallongeID(self, playerAcID, palyerBcID):
-                playerA = None
-                playerB = None
-
-                for players in self.playerList:
-                        print players
-                        if type(self.playerList[players]) == player.Player:
-                                if self.playerList[players].challongeID == playerAcID:
-                                        playerA = self.playerList[players]
-
-                                if self.playerList[players].name == playerBcID:
-                                        playerB = self.playerList[players]
-
-                                print type(playerA)
-                                if type(playerA) == type(playerB) and type(playerA) != None:
-                                        break;
-
+		print "Swapping players"
+		print playerA.name, " as player 2"
+		print playerB.name, " as player 1"
                 participants.update(self.challongeID, playerB.challongeID, name="PlaceHolderA")
                 participants.update(self.challongeID, playerA.challongeID, name="PlaceHolderB")
                 participants.update(self.challongeID, playerB.challongeID, name=playerA.name)
                 participants.update(self.challongeID, playerA.challongeID, name=playerB.name)
-
+		
+		temp = self.playerList[playerA.tioID].challongeID
+		self.playerList[playerA.tioID].challongeID = playerB.challongeID
+		self.playerList[playerB.tioID].challongeID = temp
+		print "-----------------------------------"
 
 	def verifyBracket(self):
 		print "Verify"
-		challongeBracket = matches.index("RKtest_tourney")
-		for matchesChallonge in challongeBracket:
-			print matchesChallonge['id']
-			for cMatches in self.completedMatches:
-				if cMatches.player1.challongeID != matchesChallonge['player1-id'] and cMatches.player2.challongeID == matchesChallonge['player2-id']:
-					swapIDsViaChallongeID(cMatches.player1.challongeID, matchesChallonge['player1-id'])
+		print self.challongeID
+		challongeBracket = matches.index(self.challongeID)
+		
+		# for now, since the tournament just started, assume the max round is 2
+		(challongeRound1, tioRound1) = self.fillRoundArrays(1, challongeBracket)
+                (challongeRound2, tioRound2) = self.fillRoundArrays(2, challongeBracket)
+		
+		length = len(challongeRound1)
+		for i in range(0, length):
+			print i
+			print "Round:", tioRound1[i].bracketRound
+			print challongeRound1[i]['player1-id'], challongeRound1[i]['player2-id']
+			print tioRound1[i].player1.challongeID, tioRound1[i].player2.challongeID, tioRound1[i].player1.name, tioRound1[i].player2.name
+			self.checkP1(challongeRound1[i], tioRound1[i])
 
-				elif cMatches.player1.challongeID == matchesChallonge['player1-id'] and cMatches.player2.challongeID != matchesChallonge['player2-id']:
-					swapIDsViaChallongeID(cMatches.player2.challongeID, matchesChallonge['player2-id'])
+                length = len(challongeRound2)         
+                for i in range(0, length):
+                        print i
+                        print "Round:", tioRound2[i].bracketRound
+                        print challongeRound2[i]['player1-id'], challongeRound2[i]['player2-id']
+                        print "cID p1 tio", tioRound2[i].player1.challongeID, "cID p2 tio", tioRound2[i].player2.challongeID, tioRound2[i].player1.name, tioRound2[i].player2.name
+                        self.checkP1(challongeRound2[i], tioRound2[i])
+			
+
+	def checkP1(self, challongeMatch, tioMatch):
+		if challongeMatch['player1-id'] == tioMatch.player1.challongeID:
+			self.checkP2(challongeMatch, tioMatch, True)
+		else:
+			if challongeMatch['player1-id'] == tioMatch.player2.challongeID:
+				self.checkP2(challongeMatch, tioMatch, False)
+
+			else:
+                                self.swapIDsViaChallongeID(challongeMatch['player1-id'], tioMatch.player1.challongeID)
+				self.checkP2(challongeMatch, tioMatch, True)
+	
+	def checkP2(self, challongeMatch, tioMatch, checkP2Con):
+		if checkP2Con == True:
+			if challongeMatch['player2-id'] != tioMatch.player2.challongeID:
+				self.swapIDsViaChallongeID(challongeMatch['player2-id'], tioMatch.player2.challongeID)
+		
+		else:
+			if challongeMatch['player2-id'] != tioMatch.player1.challongeID:
+                                self.swapIDsViaChallongeID(challongeMatch['player2-id'], tioMatch.player1.challongeID)
+
+	def fillRoundArrays(self, roundNum, data):
+		# data == challonge stuff
+		challongeArray = []
+		tioArray = []
+		for challongeMatches in data:
+			if roundNum == challongeMatches['round']:
+				challongeArray.append(challongeMatches)
+			else:
+				if roundNum < challongeMatches['round']:
+					break
+		for matchInfo in self.unfinishedMatches:
+			if roundNum == matchInfo.bracketRound:
+				tioArray.append(matchInfo)
+			else:
+				if roundNum < matchInfo.bracketRound:
+					break
+		return challongeArray, tioArray
+		

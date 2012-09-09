@@ -10,6 +10,7 @@ class Match(object):
 		self.game = game
 		self.event = event
 		self.bracketRound = gameRound
+		self.isWinners = "True"
 		self.matchNumber = number
 		self.winner = "None"
 

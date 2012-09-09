@@ -19,15 +19,15 @@
 					<EntryFee>7</EntryFee>
 					<BasePotSize>0</BasePotSize>
 					<Entrants>
-						<PlayerID seed="-1" AmountPaid="7">f5ad14e3-0cd1-41c0-bbbf-9f732aa2116f</PlayerID>
-						<PlayerID seed="-1" AmountPaid="0">d63b7348-dd4a-4a3b-a990-9783f9ceec26</PlayerID>
-						<PlayerID seed="-1" AmountPaid="7">776fa4dc-637f-40d4-943b-42d0c31b7b2b</PlayerID>
-						<PlayerID seed="-1" AmountPaid="7">5ee6b435-7be6-4025-99d1-324edd932401</PlayerID>
-						<PlayerID seed="-1" AmountPaid="7">5e0327a9-5bee-4782-b981-30da0ef767a2</PlayerID>
-						<PlayerID seed="-1" AmountPaid="7">2db45f11-39df-4a5b-8c15-fbf5bbca5819</PlayerID>
-						<PlayerID seed="-1" AmountPaid="7">a8c656cd-d554-493a-bd63-af3f8161d9c4</PlayerID>
-						<PlayerID seed="-1" AmountPaid="7">117e6b9c-47ee-48ef-9a61-4a015fa10fd6</PlayerID>
-						<PlayerID seed="-1" AmountPaid="7">265f272c-807b-4b71-b69f-4f9441da1d96</PlayerID>
+						<PlayerID seed="3" AmountPaid="7">f5ad14e3-0cd1-41c0-bbbf-9f732aa2116f</PlayerID>
+						<PlayerID seed="5" AmountPaid="0">d63b7348-dd4a-4a3b-a990-9783f9ceec26</PlayerID>
+						<PlayerID seed="4" AmountPaid="7">776fa4dc-637f-40d4-943b-42d0c31b7b2b</PlayerID>
+						<PlayerID seed="7" AmountPaid="7">5ee6b435-7be6-4025-99d1-324edd932401</PlayerID>
+						<PlayerID seed="8" AmountPaid="7">5e0327a9-5bee-4782-b981-30da0ef767a2</PlayerID>
+						<PlayerID seed="1" AmountPaid="7">2db45f11-39df-4a5b-8c15-fbf5bbca5819</PlayerID>
+						<PlayerID seed="0" AmountPaid="7">a8c656cd-d554-493a-bd63-af3f8161d9c4</PlayerID>
+						<PlayerID seed="6" AmountPaid="7">117e6b9c-47ee-48ef-9a61-4a015fa10fd6</PlayerID>
+						<PlayerID seed="2" AmountPaid="7">265f272c-807b-4b71-b69f-4f9441da1d96</PlayerID>
 					</Entrants>
 					<GameType>Singles</GameType>
 					<HouseCut>0</HouseCut>
@@ -41,15 +41,15 @@
 					<SeedType>Random</SeedType>
 					<SeparateByLocation>False</SeparateByLocation>
 					<Seeds>
-						<PlayerID>265f272c-807b-4b71-b69f-4f9441da1d96</PlayerID>
-						<PlayerID>5ee6b435-7be6-4025-99d1-324edd932401</PlayerID>
-						<PlayerID>117e6b9c-47ee-48ef-9a61-4a015fa10fd6</PlayerID>
 						<PlayerID>a8c656cd-d554-493a-bd63-af3f8161d9c4</PlayerID>
+						<PlayerID>2db45f11-39df-4a5b-8c15-fbf5bbca5819</PlayerID>
+						<PlayerID>265f272c-807b-4b71-b69f-4f9441da1d96</PlayerID>
 						<PlayerID>f5ad14e3-0cd1-41c0-bbbf-9f732aa2116f</PlayerID>
 						<PlayerID>776fa4dc-637f-40d4-943b-42d0c31b7b2b</PlayerID>
-						<PlayerID>2db45f11-39df-4a5b-8c15-fbf5bbca5819</PlayerID>
-						<PlayerID>5e0327a9-5bee-4782-b981-30da0ef767a2</PlayerID>
 						<PlayerID>d63b7348-dd4a-4a3b-a990-9783f9ceec26</PlayerID>
+						<PlayerID>117e6b9c-47ee-48ef-9a61-4a015fa10fd6</PlayerID>
+						<PlayerID>5ee6b435-7be6-4025-99d1-324edd932401</PlayerID>
+						<PlayerID>5e0327a9-5bee-4782-b981-30da0ef767a2</PlayerID>
 						<PlayerID>00000001-0001-0001-0101-010101010101</PlayerID>
 						<PlayerID>00000001-0001-0001-0101-010101010101</PlayerID>
 						<PlayerID>00000001-0001-0001-0101-010101010101</PlayerID>
@@ -63,7 +63,7 @@
 						<BracketStart>1/1/0001 12:00:00 AM</BracketStart>
 						<BracketEnd>12/31/9999 11:59:59 PM</BracketEnd>
 						<OriginalEstimate>12/31/9999 11:59:59 PM</OriginalEstimate>
-						<OriginalPhases>2147483647</OriginalPhases>
+						<OriginalPhases>1</OriginalPhases>
 						<Milestones />
 					</Metrics>
 					<Bracket>
@@ -101,7 +101,7 @@
 								<Player1>5e0327a9-5bee-4782-b981-30da0ef767a2</Player1>
 								<Player2>117e6b9c-47ee-48ef-9a61-4a015fa10fd6</Player2>
 								<Games>3</Games>
-								<Winner>5e0327a9-5bee-4782-b981-30da0ef767a2</Winner>
+								<Winner>00000000-0000-0000-0000-000000000000</Winner>
 								<Margin>
 								</Margin>
 								<WinnerNextMatch>8</WinnerNextMatch>
@@ -274,7 +274,7 @@
 							<Match>
 								<Number>8</Number>
 								<Player1>265f272c-807b-4b71-b69f-4f9441da1d96</Player1>
-								<Player2>5e0327a9-5bee-4782-b981-30da0ef767a2</Player2>
+								<Player2>00000000-0000-0000-0000-000000000000</Player2>
 								<Games>3</Games>
 								<Winner>00000000-0000-0000-0000-000000000000</Winner>
 								<Margin>
@@ -317,7 +317,7 @@
 								<Losses>0</Losses>
 								<Note>
 								</Note>
-								<InProgress>True</InProgress>
+								<InProgress>False</InProgress>
 							</Match>
 							<Match>
 								<Number>10</Number>
@@ -466,9 +466,9 @@
 							<Match>
 								<Number>16</Number>
 								<Player1>00000001-0001-0001-0101-010101010101</Player1>
-								<Player2>117e6b9c-47ee-48ef-9a61-4a015fa10fd6</Player2>
+								<Player2>00000000-0000-0000-0000-000000000000</Player2>
 								<Games>3</Games>
-								<Winner>117e6b9c-47ee-48ef-9a61-4a015fa10fd6</Winner>
+								<Winner>00000000-0000-0000-0000-000000000000</Winner>
 								<Margin>
 								</Margin>
 								<WinnerNextMatch>20</WinnerNextMatch>
@@ -565,7 +565,7 @@
 							</Match>
 							<Match>
 								<Number>20</Number>
-								<Player1>117e6b9c-47ee-48ef-9a61-4a015fa10fd6</Player1>
+								<Player1>00000000-0000-0000-0000-000000000000</Player1>
 								<Player2>00000000-0000-0000-0000-000000000000</Player2>
 								<Games>3</Games>
 								<Winner>00000000-0000-0000-0000-000000000000</Winner>
@@ -2763,11 +2763,11 @@
 					<EntryFee>14</EntryFee>
 					<BasePotSize>0</BasePotSize>
 					<Entrants>
-						<PlayerID seed="0" AmountPaid="14">4baeb80d-ab93-4369-806d-cdc9e7a43d6b</PlayerID>
-						<PlayerID seed="3" AmountPaid="14">8389eef6-a403-41cc-8170-124aba354939</PlayerID>
-						<PlayerID seed="2" AmountPaid="14">b8a60601-a820-4bab-9335-a7250309f004</PlayerID>
-						<PlayerID seed="4" AmountPaid="14">34726a7c-810c-4dc2-a810-d02840bf1dc4</PlayerID>
-						<PlayerID seed="1" AmountPaid="14">e22ca561-fae9-416f-83fc-c129ede602d2</PlayerID>
+						<PlayerID seed="-1" AmountPaid="14">4baeb80d-ab93-4369-806d-cdc9e7a43d6b</PlayerID>
+						<PlayerID seed="-1" AmountPaid="14">8389eef6-a403-41cc-8170-124aba354939</PlayerID>
+						<PlayerID seed="-1" AmountPaid="14">b8a60601-a820-4bab-9335-a7250309f004</PlayerID>
+						<PlayerID seed="-1" AmountPaid="14">34726a7c-810c-4dc2-a810-d02840bf1dc4</PlayerID>
+						<PlayerID seed="-1" AmountPaid="14">e22ca561-fae9-416f-83fc-c129ede602d2</PlayerID>
 					</Entrants>
 					<GameType>Teams</GameType>
 					<HouseCut>0</HouseCut>
@@ -3104,7 +3104,8 @@
 				<ID>ab1d6621-e11d-41b6-8e46-efb4ea381267</ID>
 			</Player>
 			<Player>
-				<Name></Name>
+				<Name>
+				</Name>
 				<Nickname>Gunblade</Nickname>
 				<Skill>5</Skill>
 				<Location>
