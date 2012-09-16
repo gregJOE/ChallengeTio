@@ -37,4 +37,4 @@ print tioTournament.challongeID
 #array = matches.index(tioTournament.challongeID)
 
 tioTournament.verifyBracket()
-
+tioTournament.updateBracket(child)

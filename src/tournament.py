@@ -188,4 +188,17 @@ class Tournament(object):
 				if roundNum < matchInfo.bracketRound:
 					break
 		return challongeArray, tioArray
-		
+	
+	def updateBracket(self, xml):
+		newUnfinishedMatches = []
+		#xml should be the Match subtree
+		for matchInfo in self.unfinishedMatches:
+			print matchInfo.matchNumber
+			for matchesXML in xml.findall('.Bracket/Matches/Match'):
+				if matchesXML.find('.Number').text == matchInfo.matchNumber:
+					if matchesXML.find('.Winner').text != NULL_PLAYER:
+						print "Found!"
+						matchInfo.winner = self.playerList[matchesXML.find('.Winner').text]
+						matches.update(self.url, matchInfo.cID, "2-0", matchInfo.winner.cID) 
+						break
+		print "end"
