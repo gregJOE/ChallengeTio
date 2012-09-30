@@ -13,6 +13,8 @@ class Match(object):
 		self.isWinners = "True"
 		self.matchNumber = number
 		self.winner = "None"
+		self.matchID = None
+		self.reported = False
 
 	def getPlayer1(self):
 		return self.player1

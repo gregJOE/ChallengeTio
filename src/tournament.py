@@ -73,10 +73,9 @@ class Tournament(object):
 			player1 = playerList[p1]
 			player2 = playerList[p2]
 			# is there a mapping function for finding stuff in arrays without loops
-			
 			matchDesc = match.Match(player1, player2, "SampleGame", "Sample", int(gameRound), number)
 			if int(gameRound) < 0:
-				matchDesc.isWinners = True
+				matchDesc.isWinners = False
 				matchDesc.bracketRound = matchDesc.bracketRound * -1
 
 			matchDesc.setWinner(playerList[matches.find('.Winner').text]) 
@@ -85,9 +84,11 @@ class Tournament(object):
 				# this needs to make a new Match object
 				# and push into the array
 				self.unfinishedMatches.append(matchDesc)
-				
 			else:
-				self.completedMatches.append(matchDesc)	
+				#print matchDesc.player1.name, " ", matchDesc.player2.name, " ", matchDesc.bracketRound, " ", matchDesc.matchNumber
+				if matchDesc.player1.name != "Bye" and matchDesc.player2.name != "Bye":
+					#print "Add!"
+					self.completedMatches.append(matchDesc)
 
 	
 	def createPlayerChallongeIDs(self, player):
@@ -97,6 +98,7 @@ class Tournament(object):
 				player.challongeID = players['id']
 				print player.challongeID
 		
+	# Note, this function only really works if there are no byes in either bracket
 	def swapIDsViaChallongeID(self, playerAID, playerBID):
 		playerA = None
 		playerB = None
@@ -135,21 +137,46 @@ class Tournament(object):
                 (challongeRound2, tioRound2) = self.fillRoundArrays(2, challongeBracket)
 		
 		length = len(challongeRound1)
+		print "Challonge Length: ", length
+		print "Tio Length: ", len(tioRound1)
+
 		for i in range(0, length):
 			print i
 			print "Round:", tioRound1[i].bracketRound
 			print challongeRound1[i]['player1-id'], challongeRound1[i]['player2-id']
 			print tioRound1[i].player1.challongeID, tioRound1[i].player2.challongeID, tioRound1[i].player1.name, tioRound1[i].player2.name
 			self.checkP1(challongeRound1[i], tioRound1[i])
-
-                length = len(challongeRound2)         
-                for i in range(0, length):
-                        print i
-                        print "Round:", tioRound2[i].bracketRound
-                        print challongeRound2[i]['player1-id'], challongeRound2[i]['player2-id']
-                        print "cID p1 tio", tioRound2[i].player1.challongeID, "cID p2 tio", tioRound2[i].player2.challongeID, tioRound2[i].player1.name, tioRound2[i].player2.name
-                        self.checkP1(challongeRound2[i], tioRound2[i])
-			
+			tioRound1[i].matchID = challongeRound1[i]['id']
+			print "Is there a Winner?", tioRound1[i].getWinner().name
+			if tioRound1[i].getWinner().name != "N/A":
+				print "Updating match"
+				if tioRound1[i].getWinner().challongeID == tioRound1[i].player1.challongeID:
+					matches.update(self.challongeID, tioRound1[i].matchID, scores_csv='2-0', winner_id=tioRound1[i].getWinner().challongeID)
+				else:
+					matches.update(self.challongeID, tioRound1[i].matchID, scores_csv='0-2', winner_id=tioRound1[i].getWinner().challongeID)
+				tioRound1[i].reported = True
+		
+		print "Bracket 2"
+		length = len(challongeRound2) 
+		print "Challonge Length: ", length
+		print "Tio Length: ", len(tioRound2)        
+		for i in range(0, length):
+			print i
+			print tioRound2[i]
+			print "Round:", tioRound2[i].bracketRound
+			print challongeRound2[i]['player1-id'], challongeRound2[i]['player2-id']
+			print "cID p1 tio", tioRound2[i].player1.challongeID, "cID p2 tio", tioRound2[i].player2.challongeID, tioRound2[i].player1.name, tioRound2[i].player2.name
+			self.checkP1(challongeRound2[i], tioRound2[i])
+			tioRound2[i].matchID = challongeRound2[i]['id']
+			print "Is there a Winner?", tioRound2[i].getWinner().name
+			if tioRound2[i].getWinner().name != "N/A":
+				print "Updating match"
+				# combine these two statements into a Match function
+				if tioRound2[i].getWinner().challongeID == tioRound2[i].player1.challongeID:
+					matches.update(self.challongeID, tioRound2[i].matchID, scores_csv='2-0', winner_id=tioRound2[i].getWinner().challongeID)
+				else:
+					matches.update(self.challongeID, tioRound2[i].matchID, scores_csv='0-2', winner_id=tioRound2[i].getWinner().challongeID)
+				tioRound2[i].reported = True
 
 	def checkP1(self, challongeMatch, tioMatch):
 		if challongeMatch['player1-id'] == tioMatch.player1.challongeID:
@@ -173,6 +200,7 @@ class Tournament(object):
 
 	def fillRoundArrays(self, roundNum, data):
 		# data == challonge stuff
+		print "filling array ", roundNum
 		challongeArray = []
 		tioArray = []
 		for challongeMatches in data:
@@ -182,7 +210,17 @@ class Tournament(object):
 				if roundNum < challongeMatches['round']:
 					break
 		for matchInfo in self.unfinishedMatches:
+			print "Match: ", matchInfo.matchNumber
 			if roundNum == matchInfo.bracketRound:
+				tioArray.append(matchInfo)
+			else:
+				if roundNum < matchInfo.bracketRound:
+					break
+					
+		for matchInfo in self.completedMatches:
+			print "Completed Match: ", matchInfo.matchNumber
+			if roundNum == matchInfo.bracketRound:
+				print "adding"
 				tioArray.append(matchInfo)
 			else:
 				if roundNum < matchInfo.bracketRound:
@@ -199,6 +237,6 @@ class Tournament(object):
 					if matchesXML.find('.Winner').text != NULL_PLAYER:
 						print "Found!"
 						matchInfo.winner = self.playerList[matchesXML.find('.Winner').text]
-						matches.update(self.url, matchInfo.cID, "2-0", matchInfo.winner.cID) 
+						matches.update(self.url, matchInfo.cID, scores_csv="2-0", winner_id=matchInfo.winner.cID) 
 						break
 		print "end"
