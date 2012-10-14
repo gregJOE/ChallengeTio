@@ -9,26 +9,40 @@ NULL_PLAYER = "00000000-0000-0000-0000-000000000000"
 MATCH_BYE = "00000001-0001-0001-0101-010101010101"
 class Tournament(object):
 	
-	def __init__(self, url, cID, game, event, bracketStyle, gameTree, root):
-		self.unfinishedMatches = []
-		self.completedMatches = []
-		self.allMatches = []
+	# come up with better names for gameTree / tioDoc
+	def __init__(self, url, cID, game, event, bracketStyle, gameTree, tioDoc):
+
+		self.initializeLists()
 		self.challongeID = cID
 		self.game = game
 		self.event = event
 		self.bracketType = bracketStyle
-		self.playerList = {}
 		self.url = url
-		challonge.set_credentials("ThaBlackFlash", 'o8w2yznrifwmp58koxfcyd7om4yrwv6czj38x2pu')
-		challongeTournament = tournaments.create(self.event, "RKtest_tourney", "double elimination")
-		self.challongeID = challongeTournament["id"]
+		
+		self.setChallongeCredentials("ThaBlackFlash", 'o8w2yznrifwmp58koxfcyd7om4yrwv6czj38x2pu')
+		self.challongeID = createChallongeTournament("RKtest_tourney", "double elimination")
 		# xml = root of xml tree
 		# entrantList = players in the event
 		# game played in the tournament (tournament =/= event)
-		self.createPlayers(gameTree, root.find('.PlayerList/Players'), game)
-		
-		self.fillBracket(gameTree, self.playerList)
+		self.setupTournament(gameTree, tioDoc)
 
+	def setChallongeCredentials(self, username, challongeKey):
+		challonge.set_credentials(username, challongeKey)
+	
+	def initializeLists(self):
+		self.unfinishedMatches = []
+		self.completedMatches = []
+		self.allMatches = []
+		self.playerList = {}
+		
+	def createChallongeTournament(self, name, bracketStyle):
+		challongeTournament = tournaments.create(self.event, "RKtest_tourney", "double elimination")
+		return challongeTournament["id"]
+		
+	def setupTournament(self, gameTree, tioDoc):
+		self.createPlayersFromEntrantList(gameTree, root.find('.PlayerList/Players'), game)
+		self.fillBracket(gameTree, self.playerList)
+	
 	def startTournament():
 		create(self.event, self.url, self.bracketType)
 		publish(self.challongeID)
@@ -44,10 +58,13 @@ class Tournament(object):
 	def restart(self):
 		restart(self.challongeID)
 		print "Tournament has been reset. Remember to start tournament again"
-	def addMatch(self, match):
+	
+	def addToMatchList(self, match):
 		self.matches.push(match)
 	
-	def createPlayers(self, xml, entrantList, game):
+	def createPlayersFromEntrantList(self, xml, entrantList, game):
+		# xml: top of the tree containing current game tournament information
+		print "Creating players"
 		entrantTree = xml.find('.Entrants')
 		entrants = []
 		for entrant in entrantTree:
@@ -56,11 +73,25 @@ class Tournament(object):
 				if players.find('.ID').text == pID:
 					#print "Player found:" + players.find('.Nickname').text
 					self.playerList[players.find('.ID').text] = player.Player(players.find('.Nickname').text, game, "", pID, "")
-					participants.create(self.challongeID, self.playerList[players.find('ID').text].name)
-					self.createPlayerChallongeIDs(self.playerList[players.find('ID').text])
-
+					self.addPlayerToChallongeTournament(self.playerList[players.find('.ID').text].name)
+					
 			self.playerList[NULL_PLAYER] = player.Player("N/A", game, "None", NULL_PLAYER, "") 
 			self.playerList[MATCH_BYE] = player.Player("Bye", game, "None", MATCH_BYE, "")
+
+	def createSpecialPlayersNullAndBye(self)
+	
+	def assignPlayerChallongeID(self, playerName):
+		player.challongeID = findPlayerIDInChallonge(self, player.name):
+	
+	def addPlayerToChallongeTournament(self, playerName):
+		participants.create(self.challongeID, playerName)
+		self.assignPlayerChallongeID(playerName)
+		
+	def findPlayerIDInChallonge(self, name):
+		challongePlayers = participants.index(self.challongeID)
+		for players in challongePlayers:
+			if player.name == players['name']:
+				return players['id']
 
 	def fillBracket(self, xml, playerList):
 		# find matches in xml head
@@ -74,9 +105,7 @@ class Tournament(object):
 			player2 = playerList[p2]
 			# is there a mapping function for finding stuff in arrays without loops
 			matchDesc = match.Match(player1, player2, "SampleGame", "Sample", int(gameRound), number)
-			if int(gameRound) < 0:
-				matchDesc.isWinners = False
-				matchDesc.bracketRound = matchDesc.bracketRound * -1
+	
 
 			matchDesc.setWinner(playerList[matches.find('.Winner').text]) 
 			self.allMatches.append(matchDesc)
@@ -90,14 +119,12 @@ class Tournament(object):
 					#print "Add!"
 					self.completedMatches.append(matchDesc)
 
-	
-	def createPlayerChallongeIDs(self, player):
-		challongePlayers = participants.index(self.challongeID)
-		for players in challongePlayers:
-			if player.name == players['name']:
-				player.challongeID = players['id']
-				print player.challongeID
-		
+
+	def setWinnersOrLosersBracket(self, gameRound, matchInfo):
+		if int(gameRound) < 0:
+			matchInfo.isWinners = False
+			matchInfo.bracketRound = matchDesc.bracketRound * -1
+			
 	# Note, this function only really works if there are no byes in either bracket
 	def swapIDsViaChallongeID(self, playerAID, playerBID):
 		playerA = None
@@ -137,46 +164,19 @@ class Tournament(object):
                 (challongeRound2, tioRound2) = self.fillRoundArrays(2, challongeBracket)
 		
 		length = len(challongeRound1)
-		print "Challonge Length: ", length
-		print "Tio Length: ", len(tioRound1)
 
 		for i in range(0, length):
-			print i
-			print "Round:", tioRound1[i].bracketRound
-			print challongeRound1[i]['player1-id'], challongeRound1[i]['player2-id']
-			print tioRound1[i].player1.challongeID, tioRound1[i].player2.challongeID, tioRound1[i].player1.name, tioRound1[i].player2.name
 			self.checkP1(challongeRound1[i], tioRound1[i])
 			tioRound1[i].matchID = challongeRound1[i]['id']
-			print "Is there a Winner?", tioRound1[i].getWinner().name
 			if tioRound1[i].getWinner().name != "N/A":
-				print "Updating match"
-				if tioRound1[i].getWinner().challongeID == tioRound1[i].player1.challongeID:
-					matches.update(self.challongeID, tioRound1[i].matchID, scores_csv='2-0', winner_id=tioRound1[i].getWinner().challongeID)
-				else:
-					matches.update(self.challongeID, tioRound1[i].matchID, scores_csv='0-2', winner_id=tioRound1[i].getWinner().challongeID)
-				tioRound1[i].reported = True
-		
-		print "Bracket 2"
-		length = len(challongeRound2) 
-		print "Challonge Length: ", length
-		print "Tio Length: ", len(tioRound2)        
+				updateWinnerToChallonge(self, tioRound1[i])
+				
+		length = len(challongeRound2)     
 		for i in range(0, length):
-			print i
-			print tioRound2[i]
-			print "Round:", tioRound2[i].bracketRound
-			print challongeRound2[i]['player1-id'], challongeRound2[i]['player2-id']
-			print "cID p1 tio", tioRound2[i].player1.challongeID, "cID p2 tio", tioRound2[i].player2.challongeID, tioRound2[i].player1.name, tioRound2[i].player2.name
 			self.checkP1(challongeRound2[i], tioRound2[i])
 			tioRound2[i].matchID = challongeRound2[i]['id']
-			print "Is there a Winner?", tioRound2[i].getWinner().name
 			if tioRound2[i].getWinner().name != "N/A":
-				print "Updating match"
-				# combine these two statements into a Match function
-				if tioRound2[i].getWinner().challongeID == tioRound2[i].player1.challongeID:
-					matches.update(self.challongeID, tioRound2[i].matchID, scores_csv='2-0', winner_id=tioRound2[i].getWinner().challongeID)
-				else:
-					matches.update(self.challongeID, tioRound2[i].matchID, scores_csv='0-2', winner_id=tioRound2[i].getWinner().challongeID)
-				tioRound2[i].reported = True
+				updateWinnerToChallonge(self, tioRound2[i])
 
 	def checkP1(self, challongeMatch, tioMatch):
 		if challongeMatch['player1-id'] == tioMatch.player1.challongeID:
@@ -184,9 +184,8 @@ class Tournament(object):
 		else:
 			if challongeMatch['player1-id'] == tioMatch.player2.challongeID:
 				self.checkP2(challongeMatch, tioMatch, False)
-
 			else:
-                                self.swapIDsViaChallongeID(challongeMatch['player1-id'], tioMatch.player1.challongeID)
+                self.swapIDsViaChallongeID(challongeMatch['player1-id'], tioMatch.player1.challongeID)
 				self.checkP2(challongeMatch, tioMatch, True)
 	
 	def checkP2(self, challongeMatch, tioMatch, checkP2Con):
@@ -196,7 +195,7 @@ class Tournament(object):
 		
 		else:
 			if challongeMatch['player2-id'] != tioMatch.player1.challongeID:
-                                self.swapIDsViaChallongeID(challongeMatch['player2-id'], tioMatch.player1.challongeID)
+				self.swapIDsViaChallongeID(challongeMatch['player2-id'], tioMatch.player1.challongeID)
 
 	def fillRoundArrays(self, roundNum, data):
 		# data == challonge stuff
@@ -232,11 +231,24 @@ class Tournament(object):
 		#xml should be the Match subtree
 		for matchInfo in self.unfinishedMatches:
 			print matchInfo.matchNumber
-			for matchesXML in xml.findall('.Bracket/Matches/Match'):
-				if matchesXML.find('.Number').text == matchInfo.matchNumber:
-					if matchesXML.find('.Winner').text != NULL_PLAYER:
-						print "Found!"
-						matchInfo.winner = self.playerList[matchesXML.find('.Winner').text]
-						matches.update(self.url, matchInfo.cID, scores_csv="2-0", winner_id=matchInfo.winner.cID) 
-						break
+			matchData = obtainMatchFromXML(self, matchNumber, xmlDoc)
+				if matchData.find('.Winner').text != NULL_PLAYER:
+					print "Found!"
+					matchInfo.winner = self.playerList[matchesXML.find('.Winner').text]
+					matches.update(self.url, matchInfo.cID, scores_csv="2-0", winner_id=matchInfo.winner.cID) 
+					break
 		print "end"
+
+	def obtainMatchFromXML(self, matchNumber, xmlDoc)
+		for matchesXML in xml.findall('.Bracket/Matches/Match'):
+				if matchesXML.find('.Number').text == matchInfo.matchNumber:
+					return matchXML
+		return None
+		
+	def updateWinnerToChallonge(self, matchData)
+		if matchData.getWinner().challongeID == matchData.player1.challongeID:
+			matches.update(self.challongeID, matchData.matchID, scores_csv='2-0', winner_id=matchData.getWinner().challongeID)
+		else:
+			matches.update(self.challongeID, matchData.matchID, scores_csv='0-2', winner_id=matchData.getWinner().challongeID)
+		
+		matchData.reported = True
